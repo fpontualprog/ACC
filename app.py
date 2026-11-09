@@ -32,17 +32,17 @@ def init():
  with conn() as c:
   c.execute("""CREATE TABLE IF NOT EXISTS ac(id INTEGER PRIMARY KEY,student TEXT,registration TEXT,entry TEXT,filename TEXT,path TEXT,dimension TEXT,modality TEXT,activity_date TEXT,institution TEXT,presented REAL,calculated REAL,status TEXT,note TEXT,extracted TEXT,created TEXT)""")
 def required(entry):
- m=re.match(r"(20\\d{2})\\.([12])$",entry or "")
+ m=re.match(r"(20\d{2})\.([12])$",entry or "")
  if not m:return None
  y,s=map(int,m.groups())
  if 2017<=y<=2021:return 180
  if y>=2022:return 120
  return None
 def pdftext(path):
- try:return "\\n".join(p.extract_text() or "" for p in PdfReader(str(path)).pages)
+ try:return "\n".join(p.extract_text() or "" for p in PdfReader(str(path)).pages)
  except Exception:return ""
 def hours(t):
- for p in [r"(?:carga\\s*hor[aá]ria|total\\s*de\\s*horas|dura[cç][aã]o|CH)\\s*[:\\-]?\\s*(\\d+(?:[,.]\\d+)?)\\s*(?:horas?|h|hs)\\b",r"\\b(\\d+(?:[,.]\\d+)?)\\s*horas?\\b"]:
+ for p in [r"(?:carga\s*hor[aá]ria|total\s*de\s*horas|dura[cç][aã]o|CH)\s*[:\-]?\s*(\d+(?:[,.]\d+)?)\s*(?:horas?|h|hs)\b",r"\b(\d+(?:[,.]\d+)?)\s*horas?\b"]:
   m=re.search(p,t,re.I)
   if m:
    try:
@@ -50,7 +50,7 @@ def hours(t):
    except:pass
  return 0
 def date(t):
- m=re.search(r"\\b(\\d{1,2})[/. -](\\d{1,2})[/. -](20\\d{2})\\b",t)
+ m=re.search(r"\b(\d{1,2})[/. -](\d{1,2})[/. -](20\d{2})\b",t)
  if not m:return ""
  try:return datetime(int(m[3]),int(m[2]),int(m[1])).strftime("%Y-%m-%d")
  except:return ""
@@ -135,7 +135,7 @@ def export():
  with conn() as c:rs=c.execute("select * from ac").fetchall()
  out=io.StringIO();w=csv.writer(out,delimiter=";");w.writerow(["Estudante","Matrícula","Ingresso","Dimensão","Modalidade","Data","Instituição","Horas certificado","Horas calculadas","Parecer"])
  for a in rs:w.writerow([a["student"],a["registration"],a["entry"],a["dimension"],a["modality"],a["activity_date"],a["institution"],a["presented"],a["calculated"],a["status"]])
- mem=io.BytesIO(("\\ufeff"+out.getvalue()).encode("utf-8"));mem.seek(0)
+ mem=io.BytesIO(("\ufeff"+out.getvalue()).encode("utf-8"));mem.seek(0)
  return send_file(mem,mimetype="text/csv",as_attachment=True,download_name="relatorio_ACs.csv")
 if __name__=="__main__":
  init();print("Abra http://127.0.0.1:5000");app.run(host="127.0.0.1",port=5000,debug=False)
