@@ -1,0 +1,14 @@
+INSTALACAO LOCAL — WINDOWS
+1. Instale Python 3.10+ em https://www.python.org/downloads/ (marque Add Python to PATH).
+2. Extraia a pasta do ZIP.
+3. Execute INICIAR_WINDOWS.bat.
+4. Abra http://127.0.0.1:5000 no navegador.
+5. Para encerrar, feche a janela do terminal.
+
+O servidor usa 127.0.0.1:5000: não fica acessível a outros computadores.
+O banco database.sqlite3 e os PDFs ficam nesta pasta (uploads).
+Faça backup da pasta inteira.
+A leitura automática nesta versão é para PDFs com texto selecionável.
+PDFs digitalizados e imagens precisam de OCR; faça conferência manual.
+A extração de horas e modalidade é uma sugestão. A Comissão deve revisar e aprovar.
+Somente registros marcados como Aprovada entram nas horas integralizadas.
