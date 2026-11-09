@@ -107,11 +107,15 @@ def upload():
  student=request.form.get("student","").strip(); entry=request.form.get("entry","").strip()
  files=request.files.getlist("files")
  if not student or not entry:flash("Informe estudante e período de ingresso.");return redirect(url_for("index"))
+ # Garante que a pasta exista mesmo se tiver sido removida após a inicialização.
+ UPLOAD.mkdir(parents=True, exist_ok=True)
  count=0
  for f in files:
   if not f.filename:continue
   if Path(f.filename).suffix.lower()!=".pdf":flash("Nesta versão, o envio automático aceita PDF. Imagens podem ser conferidas manualmente.");continue
-  name=secure_filename(f.filename); target=UPLOAD/(datetime.now().strftime("%Y%m%d%H%M%S%f")+"_"+name);f.save(target)
+  name=secure_filename(f.filename); target=UPLOAD/(datetime.now().strftime("%Y%m%d%H%M%S%f")+"_"+name)
+  target.parent.mkdir(parents=True, exist_ok=True)
+  f.save(target)
   text=pdftext(target); mod=modality(text); h=hours(text); dim=R[mod][0]; calc_h=calc(mod,h,text)
   with conn() as c:c.execute("insert into ac(student,registration,entry,filename,path,dimension,modality,activity_date,institution,presented,calculated,status,note,extracted,created) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
    (student,request.form.get("registration",""),entry,name,str(target),dim,mod,date(text),institution(text),h,calc_h,"Pendente","",text,datetime.now().isoformat()))
