@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+database.sqlite3
+uploads/*
+!uploads/.gitkeep
+.env
